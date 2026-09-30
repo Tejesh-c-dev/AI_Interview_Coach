@@ -9,6 +9,7 @@ export type ValidationErrors = {
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+/** Returns field-level errors for the registration form. */
 export function validateRegisterForm(values: RegisterFormValues): ValidationErrors {
   const errors: ValidationErrors = {};
 
@@ -34,5 +35,18 @@ export function validateRegisterForm(values: RegisterFormValues): ValidationErro
     errors.confirmPassword = "Passwords do not match";
   }
 
+  return errors;
+}
+
+export function validateLoginForm(values: { email: string; password: string }): ValidationErrors {
+  const errors: ValidationErrors = {};
+  if (!values.email.trim()) {
+    errors.email = "Email is required";
+  } else if (!EMAIL_RE.test(values.email)) {
+    errors.email = "Please enter a valid email address";
+  }
+  if (!values.password) {
+    errors.password = "Password is required";
+  }
   return errors;
 }

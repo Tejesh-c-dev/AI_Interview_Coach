@@ -10,6 +10,7 @@ export function getApiErrorMessage(
   error: unknown,
   fallback = "Something went wrong. Please try again.",
 ): string {
+  // Prefer the structured message returned by the backend.
   const axiosError = error as { response?: { data?: ApiError } };
   const backendMessage = axiosError.response?.data?.message;
   if (backendMessage) return backendMessage;

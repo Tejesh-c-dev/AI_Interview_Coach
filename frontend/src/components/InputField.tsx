@@ -9,6 +9,7 @@ interface InputFieldProps {
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
 }
 
+/** Renders a labeled input and its optional validation message. */
 export default function InputField({
   label,
   name,

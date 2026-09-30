@@ -18,6 +18,26 @@ export interface RegisterResponse {
   message: string;
 }
 
+/** Payload sent to POST /api/auth/login */
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+/** Token response returned after successful login */
+export interface LoginResponse {
+  token: string;
+  tokenType: string;
+  expiresIn: number;
+}
+
+export interface UserResponse {
+  id: string;
+  name: string;
+  email: string;
+  createdAt: string;
+}
+
 /** Error body returned by the backend's GlobalExceptionHandler */
 export interface ApiError {
   timestamp: string;

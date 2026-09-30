@@ -1,5 +1,7 @@
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  /** Shows a disabled loading state while an action is running. */
   isLoading?: boolean;
+  /** Text displayed instead of the button label during loading. */
   loadingText?: string;
 }
 
@@ -11,6 +13,7 @@ export default function Button({
   className = "",
   ...props
 }: ButtonProps) {
+  // Renders a reusable button with consistent loading and disabled behavior.
   return (
     <button
       disabled={isLoading || disabled}

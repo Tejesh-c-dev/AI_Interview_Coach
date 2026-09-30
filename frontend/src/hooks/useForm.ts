@@ -30,6 +30,7 @@ export interface UseFormReturn<T extends object> {
 export function useForm<T extends object>(
   initialValues: T
 ): UseFormReturn<T> {
+  // Stores the current form values and submission state.
   const [values, setValues] = useState<T>(initialValues);
   const [errors, setErrors] = useState<Record<string, string | undefined>>({});
   const [serverError, setServerError] = useState<string | null>(null);
@@ -38,6 +39,7 @@ export function useForm<T extends object>(
 
   const handleChange = useCallback(
     (name: keyof T) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      // Updates one field and clears errors caused by its previous value.
       setValues((prev) => ({ ...prev, [name]: e.target.value }));
       setErrors((prev) => ({ ...prev, [name]: undefined }));
       setServerError(null);
@@ -51,6 +53,7 @@ export function useForm<T extends object>(
       submitFn: (values: T) => Promise<string | undefined>
     ) => {
       return async (e: React.FormEvent) => {
+        // Validates before submission and exposes API failures to the form.
         e.preventDefault();
         setServerError(null);
         setSuccessMessage(null);

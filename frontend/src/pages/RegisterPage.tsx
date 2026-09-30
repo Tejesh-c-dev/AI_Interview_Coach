@@ -15,9 +15,11 @@ const initialValues: RegisterFormValues = {
   confirmPassword: "",
 };
 
+// Keeps the success notification visible long enough to be read before redirecting.
 /** How long the success toast stays visible before redirecting to the Login page. */
 const REDIRECT_DELAY_MS = 2000;
 
+/** Renders the account registration form and handles its submission lifecycle. */
 export default function RegisterPage() {
   const navigate = useNavigate();
 
@@ -32,13 +34,16 @@ export default function RegisterPage() {
     clearServerError,
   } = useForm<RegisterFormValues>(initialValues);
 
+  // Sends only the registration fields required by the backend.
   const onSubmit = handleSubmit(validateRegisterForm, async (formValues) => {
     const { name, email, password } = formValues;
     const { message } = await register({ name, email, password });
     return message;
   });
 
+  // Navigates to login after the success notification is dismissed.
   const dismissSuccess = useCallback(() => navigate("/login", { replace: true }), [navigate]);
+  // Clears the current server error notification.
   const dismissError = useCallback(() => clearServerError(), [clearServerError]);
 
   return (

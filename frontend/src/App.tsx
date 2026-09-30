@@ -3,6 +3,7 @@ import RegisterPage from "@/pages/RegisterPage";
 import LoginPage from "@/pages/LoginPage";
 
 export default function App() {
+  // Defines the application's client-side routes and fallback page.
   return (
     <BrowserRouter>
       <Routes>

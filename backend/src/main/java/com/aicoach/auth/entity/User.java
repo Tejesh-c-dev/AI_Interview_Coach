@@ -21,23 +21,29 @@ import java.util.UUID;
 @Table(name = "users")
 public class User {
 
+    /** Database identifier for the user. */
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false, updatable = false)
     private UUID id;
 
+    /** Display name shown in the application. */
     @Column(name = "name", nullable = false)
     private String name;
 
+    /** Normalized, unique email used to identify the account. */
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
+    /** BCrypt-hashed account password. */
     @Column(name = "password", nullable = false)
     private String password;
 
+    /** Time when the user record was first persisted. */
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
+    /** Sets the creation time when persistence first creates the entity. */
     @PrePersist
     protected void onCreate() {
         if (createdAt == null) {
