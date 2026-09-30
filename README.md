@@ -9,17 +9,21 @@ database to provide a modular foundation for AI-powered interview workflows.
 
 ## Current scope
 
-Phase 1 provides the development foundation and authentication:
+Phase 1 provides the development foundation, authentication, question bank,
+and deterministic interview sessions:
 
 * User registration and login
 * BCrypt password hashing
 * JWT bearer-token authentication
 * Protected `GET /api/auth/me` endpoint
+* Track and difficulty-based question bank
+* Authenticated interview sessions with ownership enforcement
+* Session progression, safe question responses, and completion
 * PostgreSQL persistence with Flyway migrations
 * Environment-driven database, JWT, and Judge0 configuration
 
-Question Bank, code execution, evaluation, progress, dashboard, and LLM
-orchestration remain intentionally unimplemented.
+Code execution, evaluation, progress, dashboard, and LLM orchestration remain
+intentionally unimplemented.
 
 ## Tech stack
 
@@ -72,6 +76,33 @@ The login response contains a bearer JWT. Send it in the
 `JWT_SECRET` must be a Base64-encoded value containing at least 32 random
 bytes; `JWT_EXPIRATION` is expressed in milliseconds.
 
+## Interview Session API
+
+All session endpoints require the bearer JWT returned by login. The backend
+gets the session owner from the authenticated security context; clients must
+not send a user ID.
+
+```text
+POST /api/sessions
+GET  /api/sessions/{id}/next-question
+POST /api/sessions/{id}/finish
+```
+
+Start a session with a track and difficulty:
+
+```json
+{
+  "track": "DSA",
+  "difficulty": "MEDIUM",
+  "configuration": {
+    "companyMode": "general"
+  }
+}
+```
+
+The question response contains only safe question fields. Hidden test cases
+are retained by the question bank and are never returned by the API.
+
 ## Project structure
 
 ```text
@@ -90,8 +121,7 @@ AI_Interview_Coach/
 
 ## Future improvements
 
-* Technical and behavioral interview sessions
-* Structured question bank with difficulty-based selection
+* Structured answer capture for interview sessions
 * AI-assisted answer evaluation and contextual hints
 * Code execution integration
 * Progress tracking and performance dashboards

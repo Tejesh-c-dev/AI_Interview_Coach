@@ -1,6 +1,6 @@
 
 import { useCallback } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import InputField from "@/components/InputField";
 import Button from "@/components/Button";
 import Toast from "@/components/Toast";
@@ -11,6 +11,7 @@ import { validateLoginForm } from "@/utils/validation/auth";
 const initialValues = { email: "", password: "" };
 
 export default function LoginPage() {
+  const navigate = useNavigate();
   const {
     values, errors, serverError, successMessage, isSubmitting, handleChange, handleSubmit,
     clearServerError,
@@ -18,6 +19,7 @@ export default function LoginPage() {
 
   const onSubmit = handleSubmit(validateLoginForm, async (formValues) => {
     await login(formValues);
+    navigate("/interview", { replace: true });
     return "Login successful";
   });
   const dismissError = useCallback(() => clearServerError(), [clearServerError]);
