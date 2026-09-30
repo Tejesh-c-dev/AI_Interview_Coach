@@ -1,31 +1,99 @@
-# AI_Interview_Coach
 # AI Interview Coach
 
-## Phase 1 development
+An AI-assisted interview preparation platform designed to help students
+practice technical and behavioral interviews, receive structured feedback, and
+track their interview performance.
 
-The backend uses Java 25, Spring Boot 4.1, PostgreSQL, and Flyway. PostgreSQL
-is the source of truth for the schema; migrations are packaged under
-`backend/src/main/resources/db/migration` and run automatically when the
-application starts. Hibernate validates the migrated schema and does not
-modify it.
+The project combines a React frontend, Spring Boot backend, and PostgreSQL
+database to provide a modular foundation for AI-powered interview workflows.
 
-1. Copy `.env.example` to `.env` and replace the development values. Spring
-   Boot loads this optional local file, and Docker Compose uses it for the
-   PostgreSQL container.
-2. Start PostgreSQL with `docker compose up -d postgres`.
-3. Start the backend with `backend\mvnw.cmd spring-boot:run`.
-4. Start the frontend with `npm run dev` from `frontend`.
+## Current scope
 
-The Vite development server proxies `/api` requests to the backend at
-`http://localhost:8080`. JWT and Judge0 settings are environment-driven now so
-future authentication and execution modules do not need embedded credentials.
+Phase 1 provides the development foundation and authentication:
 
-Authentication is available at `POST /api/auth/register` and
-`POST /api/auth/login`. The login response contains a bearer JWT; send it as
-`Authorization: Bearer <token>` to access protected endpoints such as
-`GET /api/auth/me`. Set `JWT_SECRET` to a Base64-encoded value containing at
-least 32 random bytes; `JWT_EXPIRATION` is expressed in milliseconds.
+* User registration and login
+* BCrypt password hashing
+* JWT bearer-token authentication
+* Protected `GET /api/auth/me` endpoint
+* PostgreSQL persistence with Flyway migrations
+* Environment-driven database, JWT, and Judge0 configuration
 
-The current Phase 1 scope is the development foundation and authentication.
 Question Bank, code execution, evaluation, progress, dashboard, and LLM
 orchestration remain intentionally unimplemented.
+
+## Tech stack
+
+* React, TypeScript, Vite, and Tailwind CSS
+* Java 25 and Spring Boot 4.1
+* Spring Web, Spring Data JPA, Spring Security, and Bean Validation
+* PostgreSQL and Flyway
+* Maven and Docker Compose
+
+## Running locally
+
+### Prerequisites
+
+Install Java 25, Node.js, Docker Desktop, and Git.
+
+1. Copy `.env.example` to `.env` and replace the development values. Do not
+   commit `.env`.
+2. Start PostgreSQL:
+
+   ```bash
+   docker compose up -d postgres
+   ```
+
+3. Start the backend:
+
+   ```text
+   backend\mvnw.cmd spring-boot:run
+   ```
+
+4. Start the frontend from the `frontend` directory:
+
+   ```bash
+   npm install
+   npm run dev
+   ```
+
+The Vite development server proxies `/api` requests to the backend at
+`http://localhost:8080`.
+
+## Authentication API
+
+```text
+POST /api/auth/register
+POST /api/auth/login
+GET  /api/auth/me
+```
+
+The login response contains a bearer JWT. Send it in the
+`Authorization: Bearer <token>` header when calling protected endpoints.
+`JWT_SECRET` must be a Base64-encoded value containing at least 32 random
+bytes; `JWT_EXPIRATION` is expressed in milliseconds.
+
+## Project structure
+
+```text
+AI_Interview_Coach/
+├── frontend/
+│   ├── src/
+│   └── package.json
+├── backend/
+│   ├── src/
+│   │   ├── main/java/
+│   │   └── main/resources/
+│   └── pom.xml
+├── docker-compose.yml
+└── README.md
+```
+
+## Future improvements
+
+* Technical and behavioral interview sessions
+* Structured question bank with difficulty-based selection
+* AI-assisted answer evaluation and contextual hints
+* Code execution integration
+* Progress tracking and performance dashboards
+* Resume-based and company-specific interview modes
+* Voice-based interviews and long-term learning analytics
