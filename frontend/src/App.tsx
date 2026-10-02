@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import RegisterPage from "@/pages/RegisterPage";
 import LoginPage from "@/pages/LoginPage";
 import InterviewPage from "@/pages/InterviewPage";
+import DashboardPage from "@/pages/DashboardPage";
 
 export default function App() {
   // Defines the application's client-side routes and fallback page.
@@ -11,6 +12,7 @@ export default function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/interview" element={<InterviewPage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="*" element={<Navigate to="/register" replace />} />
       </Routes>
     </BrowserRouter>

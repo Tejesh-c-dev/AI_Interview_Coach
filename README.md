@@ -10,7 +10,8 @@ database to provide a modular foundation for AI-powered interview workflows.
 ## Current scope
 
 Phase 1 provides the development foundation, authentication, question bank,
-and deterministic interview sessions:
+deterministic interview sessions, code execution, submissions, progress
+tracking, interview history, and a dashboard:
 
 * User registration and login
 * BCrypt password hashing
@@ -21,9 +22,12 @@ and deterministic interview sessions:
 * Session progression, safe question responses, and completion
 * PostgreSQL persistence with Flyway migrations
 * Environment-driven database, JWT, and Judge0 configuration
+* Server-side Judge0 execution with normalized deterministic verdicts
+* Per-user topic attempts, accuracy, and last-practiced metrics
+* Owned dashboard and interview-history APIs with a React dashboard
 
-Code execution, evaluation, progress, dashboard, and LLM orchestration remain
-intentionally unimplemented.
+Adaptive difficulty, LangGraph, LLM features, and AI evaluation are not part of
+Phase 1.
 
 ## Tech stack
 
@@ -103,6 +107,24 @@ Start a session with a track and difficulty:
 The question response contains only safe question fields. Hidden test cases
 are retained by the question bank and are never returned by the API.
 
+## Submission, progress, and dashboard APIs
+
+```text
+POST /api/submissions
+GET  /api/progress/{userId}
+GET  /api/progress/{userId}/dashboard
+GET  /api/progress/{userId}/history
+```
+
+Submission requests contain `sessionId`, `questionId`, `sourceCode`, and a
+supported `language` (`java`, `python`, or `cpp`). The authenticated user is
+always taken from the JWT. The progress endpoints reject user IDs that do not
+belong to the authenticated account.
+
+Open `http://localhost:3000/dashboard` after login to view totals, recent
+sessions, topic accuracy, attempts, weak topics (below 60%), and a basic
+submission-accuracy trend.
+
 ## Project structure
 
 ```text
@@ -119,11 +141,23 @@ AI_Interview_Coach/
 └── README.md
 ```
 
-## Future improvements
+## Required environment variables
 
-* Structured answer capture for interview sessions
-* AI-assisted answer evaluation and contextual hints
-* Code execution integration
-* Progress tracking and performance dashboards
-* Resume-based and company-specific interview modes
-* Voice-based interviews and long-term learning analytics
+`DB_URL`, `DB_USERNAME`, `DB_PASSWORD`, `JWT_SECRET`, and optionally
+`JWT_EXPIRATION`, `SERVER_PORT`, `JUDGE0_BASE_URL`, `JUDGE0_API_KEY`,
+`JUDGE0_API_HOST`, and `JUDGE0_POLL_TIMEOUT_MS`. `JWT_SECRET` must be a
+Base64-encoded value containing at least 32 random bytes.
+
+## Known Phase 1 limitations
+
+* Progress is updated for coding submissions only; non-coding answers are not
+  yet scored.
+* Each valid submission is an attempt; Phase 1 does not provide client-side
+  idempotency keys.
+* Judge0 execution is synchronous and returns `PROCESSING` when polling times
+  out.
+
+## Phase 2
+
+Implement adaptive difficulty, structured answer evaluation, LangGraph
+orchestration, LLM-assisted feedback, and richer long-term analytics.
