@@ -11,4 +11,6 @@ import java.util.UUID;
 public interface SessionQuestionRepository extends JpaRepository<SessionQuestion, UUID> {
     @Query("select sq.question.id from SessionQuestion sq where sq.session.id = :sessionId")
     List<UUID> findQuestionIdsBySessionId(@Param("sessionId") UUID sessionId);
+
+    boolean existsBySessionIdAndQuestionId(UUID sessionId, UUID questionId);
 }

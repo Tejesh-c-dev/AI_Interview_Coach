@@ -1,0 +1,17 @@
+package com.aicoach.execution.dto;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+/**
+ * Internal DTO serialized and sent to the Judge0 API.
+ * This type must never be exposed through our public API.
+ */
+public record Judge0SubmissionRequest(
+        @JsonProperty("source_code") String sourceCode,
+        @JsonProperty("language_id") int languageId,
+        @JsonProperty("stdin") String stdin,
+        @JsonProperty("expected_output") String expectedOutput,
+        @JsonProperty("cpu_time_limit") Double cpuTimeLimit,
+        @JsonProperty("memory_limit") Integer memoryLimit,
+        @JsonProperty("wall_time_limit") Double wallTimeLimit
+) {}

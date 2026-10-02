@@ -14,9 +14,13 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import com.aicoach.questionbank.exception.QuestionNotFoundException;
 import com.aicoach.orchestrator.exception.InactiveSessionException;
 import com.aicoach.orchestrator.exception.SessionNotFoundException;
+import com.aicoach.execution.exception.Judge0UnavailableException;
+import com.aicoach.execution.exception.InvalidSubmissionException;
+import com.aicoach.execution.exception.UnsupportedLanguageException;
 
 import java.time.Instant;
 import java.util.stream.Collectors;
+import org.springframework.security.access.AccessDeniedException;
 
 /**
  * Centralizes exception handling so every error is returned as a consistent
@@ -92,6 +96,30 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> handleTypeMismatch(MethodArgumentTypeMismatchException ex,
             HttpServletRequest request) {
         return build(HttpStatus.BAD_REQUEST, "Invalid session id", request);
+    }
+
+    @ExceptionHandler(UnsupportedLanguageException.class)
+    public ResponseEntity<ApiError> handleUnsupportedLanguage(UnsupportedLanguageException ex,
+            HttpServletRequest request) {
+        return build(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(InvalidSubmissionException.class)
+    public ResponseEntity<ApiError> handleInvalidSubmission(InvalidSubmissionException ex,
+            HttpServletRequest request) {
+        return build(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(Judge0UnavailableException.class)
+    public ResponseEntity<ApiError> handleJudge0Unavailable(Judge0UnavailableException ex,
+            HttpServletRequest request) {
+        log.error("Judge0 unavailable for request {}: {}", request.getRequestURI(), ex.getMessage());
+        return build(HttpStatus.BAD_GATEWAY, "Code execution service is currently unavailable. Please try again later.", request);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiError> handleAccessDenied(AccessDeniedException ex, HttpServletRequest request) {
+        return build(HttpStatus.FORBIDDEN, "Access denied", request);
     }
 
     @ExceptionHandler(Exception.class)

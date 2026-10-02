@@ -31,3 +31,4 @@ app:
     base-url: ${JUDGE0_BASE_URL:https://ce.judge0.com}
     api-key: ${JUDGE0_API_KEY:}
     api-host: ${JUDGE0_API_HOST:}
+    poll-timeout-ms: ${JUDGE0_POLL_TIMEOUT_MS:10000}
