@@ -23,7 +23,8 @@ public class QuestionBankController {
         this.service = service;
     }
 
-    @GetMapping
+    @GetMapping // Retrieves a list of questions based on the provided filters (track,
+                // difficulty, topic, type).
     public ResponseEntity<List<QuestionResponse>> findQuestions(
             @RequestParam String track,
             @RequestParam String difficulty,
@@ -32,7 +33,8 @@ public class QuestionBankController {
         return ResponseEntity.ok(service.findQuestions(track, difficulty, topic, type));
     }
 
-    @PostMapping("/select")
+    @PostMapping("/select") // Selects a question based on the provided selection criteria and returns the
+                            // selected question.
     public ResponseEntity<QuestionResponse> selectQuestion(
             @Valid @RequestBody QuestionSelectionRequest request) {
         return ResponseEntity.ok(service.selectQuestion(request));

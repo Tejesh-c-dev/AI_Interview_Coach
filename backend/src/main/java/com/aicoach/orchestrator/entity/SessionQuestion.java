@@ -6,15 +6,15 @@ import jakarta.persistence.*;
 import java.util.UUID;
 
 @Entity
-@Table(name = "interview_session_questions",
-        uniqueConstraints = @UniqueConstraint(name = "session_question_unique", columnNames = {"session_id", "question_id"}))
+@Table(name = "interview_session_questions", uniqueConstraints = @UniqueConstraint(name = "session_question_unique", columnNames = {
+        "session_id", "question_id" }))
 public class SessionQuestion {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "session_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false) // Many-to-one relationship with InterviewSession, lazy loading
+    @JoinColumn(name = "session_id", nullable = false) // Foreign key column for the session
     private InterviewSession session;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -24,7 +24,15 @@ public class SessionQuestion {
     @Column(name = "question_order", nullable = false)
     private int questionOrder;
 
-    public void setSession(InterviewSession session) { this.session = session; }
-    public void setQuestion(Question question) { this.question = question; }
-    public void setQuestionOrder(int questionOrder) { this.questionOrder = questionOrder; }
+    public void setSession(InterviewSession session) {
+        this.session = session;
+    }
+
+    public void setQuestion(Question question) {
+        this.question = question;
+    }
+
+    public void setQuestionOrder(int questionOrder) {
+        this.questionOrder = questionOrder;
+    }
 }

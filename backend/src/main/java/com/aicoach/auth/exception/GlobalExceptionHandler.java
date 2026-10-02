@@ -19,16 +19,18 @@ import java.time.Instant;
 import java.util.stream.Collectors;
 
 /**
- * Centralizes exception handling so every error is returned as a consistent {@link ApiError} payload
+ * Centralizes exception handling so every error is returned as a consistent
+ * {@link ApiError} payload
  * instead of a stack trace or Spring's default error page.
  */
-@RestControllerAdvice
+@RestControllerAdvice // Global exception handler for all controllers
 public class GlobalExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(InvalidCredentialsException.class)
-    public ResponseEntity<ApiError> handleInvalidCredentials(InvalidCredentialsException ex, HttpServletRequest request) {
+    public ResponseEntity<ApiError> handleInvalidCredentials(InvalidCredentialsException ex,
+            HttpServletRequest request) {
         return build(HttpStatus.UNAUTHORIZED, ex.getMessage(), request);
     }
 
@@ -46,14 +48,14 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ApiError> handleDataIntegrityViolation(DataIntegrityViolationException ex,
-                                                                 HttpServletRequest request) {
+            HttpServletRequest request) {
         log.warn("Data integrity violation for request {}", request.getRequestURI());
         return build(HttpStatus.CONFLICT, "A data integrity constraint was violated", request);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ApiError> handleUnreadableBody(HttpMessageNotReadableException ex,
-                                                          HttpServletRequest request) {
+            HttpServletRequest request) {
         return build(HttpStatus.BAD_REQUEST, "Malformed request body", request);
     }
 
@@ -88,7 +90,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ApiError> handleTypeMismatch(MethodArgumentTypeMismatchException ex,
-                                                        HttpServletRequest request) {
+            HttpServletRequest request) {
         return build(HttpStatus.BAD_REQUEST, "Invalid session id", request);
     }
 
@@ -105,8 +107,7 @@ public class GlobalExceptionHandler {
                 status.value(),
                 status.getReasonPhrase(),
                 message,
-                request.getRequestURI()
-        );
+                request.getRequestURI());
         return ResponseEntity.status(status).body(error);
     }
 }

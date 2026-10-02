@@ -73,26 +73,91 @@ public class Question {
         updatedAt = Instant.now();
     }
 
-    public UUID getId() { return id; }
-    public void setId(UUID id) { this.id = id; }
-    public QuestionTrack getTrack() { return track; }
-    public void setTrack(QuestionTrack track) { this.track = track; }
-    public QuestionDifficulty getDifficulty() { return difficulty; }
-    public void setDifficulty(QuestionDifficulty difficulty) { this.difficulty = difficulty; }
-    public String getTopic() { return topic; }
-    public void setTopic(String topic) { this.topic = topic; }
-    public String getPrompt() { return prompt; }
-    public void setPrompt(String prompt) { this.prompt = prompt; }
-    public QuestionType getQuestionType() { return questionType; }
-    public void setQuestionType(QuestionType questionType) { this.questionType = questionType; }
-    public String getCodingLanguage() { return codingLanguage; }
-    public void setCodingLanguage(String codingLanguage) { this.codingLanguage = codingLanguage; }
-    public String getStarterCode() { return starterCode; }
-    public void setStarterCode(String starterCode) { this.starterCode = starterCode; }
-    public String getFunctionSignature() { return functionSignature; }
-    public void setFunctionSignature(String functionSignature) { this.functionSignature = functionSignature; }
-    public Map<String, Object> getHiddenTestCases() { return hiddenTestCases; }
-    public void setHiddenTestCases(Map<String, Object> hiddenTestCases) { this.hiddenTestCases = hiddenTestCases; }
-    public Instant getCreatedAt() { return createdAt; }
-    public Instant getUpdatedAt() { return updatedAt; }
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public QuestionTrack getTrack() {
+        return track;
+    }
+
+    public void setTrack(QuestionTrack track) {
+        this.track = track;
+    }
+
+    public QuestionDifficulty getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(QuestionDifficulty difficulty) {
+        this.difficulty = difficulty;
+    }
+
+    public String getTopic() {
+        return topic;
+    }
+
+    public void setTopic(String topic) {
+        this.topic = topic;
+    }
+
+    public String getPrompt() {
+        return prompt;
+    }
+
+    public void setPrompt(String prompt) {
+        this.prompt = prompt;
+    }
+
+    public QuestionType getQuestionType() {
+        return questionType;
+    }
+
+    public void setQuestionType(QuestionType questionType) {
+        this.questionType = questionType;
+    }
+
+    public String getCodingLanguage() {
+        return codingLanguage;
+    }
+
+    public void setCodingLanguage(String codingLanguage) {
+        this.codingLanguage = codingLanguage;
+    }
+
+    public String getStarterCode() {
+        return starterCode;
+    }
+
+    public void setStarterCode(String starterCode) {
+        this.starterCode = starterCode;
+    }
+
+    public String getFunctionSignature() {
+        return functionSignature;
+    }
+
+    public void setFunctionSignature(String functionSignature) {
+        this.functionSignature = functionSignature;
+    }
+
+    public Map<String, Object> getHiddenTestCases() {
+        return hiddenTestCases;
+    }
+
+    public void setHiddenTestCases(Map<String, Object> hiddenTestCases) {
+        this.hiddenTestCases = hiddenTestCases;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
 }

@@ -35,15 +35,17 @@ public class AuthService {
     /**
      * Registers a new user.
      *
-     * <p>The email is normalized (trimmed and lower-cased) before both the
+     * <p>
+     * The email is normalized (trimmed and lower-cased) before both the
      * duplicate lookup and the insert, so {@code "  User@Example.COM "} and
-     * {@code "user@example.com"} are treated as the same address.</p>
+     * {@code "user@example.com"} are treated as the same address.
+     * </p>
      *
      * @param request the validated registration payload
      * @return the registration response
      * @throws DuplicateEmailException if the email is already registered
      */
-    @Transactional
+    @Transactional // write operation, so we can catch unique-constraint violations
     public RegisterResponse register(RegisterRequest request) {
         String email = normalizeEmail(request.email());
 
@@ -57,10 +59,13 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(request.password()));
 
         try {
-            // saveAndFlush surfaces the unique-constraint violation inside this
-            // transaction, so concurrent registrations are caught even when two
-            // requests pass the findByEmail check above at the same time.
-            userRepository.saveAndFlush(user);
+            /*
+             * saveAndFlush surfaces the unique-constraint violation inside this
+             * transaction, so concurrent registrations are caught even when two
+             * requests pass the findByEmail check above at the same time.
+             */
+
+            userRepository.saveAndFlush(user); // throws DataIntegrityViolationException if email is already registered
         } catch (DataIntegrityViolationException ex) {
             throw new DuplicateEmailException("Email is already registered");
         }
@@ -68,6 +73,9 @@ public class AuthService {
         return new RegisterResponse("User registered successfully");
     }
 
+    // Logs in a user by validating their credentials and generating a JWT token.
+    // Throws InvalidCredentialsException if the email is not found or the password
+    // does not match.
     @Transactional(readOnly = true)
     public LoginResponse login(LoginRequest request) {
         String email = normalizeEmail(request.email());
@@ -80,6 +88,8 @@ public class AuthService {
                 jwtService.getExpirationMillis());
     }
 
+    // Retrieves the current user's information based on their email.
+    // Throws InvalidCredentialsException if the user is not found.
     @Transactional(readOnly = true)
     public UserResponse getCurrentUser(String email) {
         return userRepository.findByEmail(email)
@@ -87,6 +97,10 @@ public class AuthService {
                 .orElseThrow(InvalidCredentialsException::new);
     }
 
+    // Normalizes an email address by trimming whitespace and converting to lower
+    // case.
+    // This ensures that email comparisons are case-insensitive and ignore
+    // leading/trailing spaces.
     private String normalizeEmail(String email) {
         return email.trim().toLowerCase(Locale.ROOT);
     }

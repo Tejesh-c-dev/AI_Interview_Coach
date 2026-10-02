@@ -58,12 +58,13 @@ public class QuestionBankService {
         List<Question> candidates = topic == null || topic.isBlank()
                 ? repository.findAllByTrackAndDifficultyOrderById(track, difficulty)
                 : repository.findAllByTrackAndDifficultyAndTopicContainingIgnoreCaseOrderById(
-                track, difficulty, topic);
+                        track, difficulty, topic);
         if (candidates.isEmpty()) {
             throw new QuestionNotFoundException("No questions match the requested track, difficulty, and topic");
         }
         String key = request.selectionKey() == null ? "" : request.selectionKey();
-        // Stable hashing gives each interview key a repeatable slot while rotating across candidates.
+        // Stable hashing gives each interview key a repeatable slot while rotating
+        // across candidates.
         int startIndex = Math.floorMod((track.name() + "|" + difficulty.name() + "|" + topic + "|" + key).hashCode(),
                 candidates.size());
         for (int offset = 0; offset < candidates.size(); offset++) {
