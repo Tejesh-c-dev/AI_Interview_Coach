@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import Button from "@/components/Button";
 import CodingWorkspace from "@/components/CodingWorkspace";
@@ -11,15 +11,46 @@ import type { NextQuestionResponse } from "@/types/interviewSession";
 
 const tracks: QuestionTrack[]           = ["DSA", "BEHAVIORAL", "SYSTEM_DESIGN", "OOP", "JAVA"];
 const difficulties: QuestionDifficulty[] = ["EASY", "MEDIUM", "HARD"];
+const INTERVIEW_STATE_KEY = "ai_coach_active_interview";
+
+type SavedInterviewState = {
+  sessionId: string;
+  current: NextQuestionResponse;
+};
+
+function loadSavedInterviewState(): SavedInterviewState | null {
+  const saved = localStorage.getItem(INTERVIEW_STATE_KEY);
+  if (!saved) return null;
+
+  try {
+    const state = JSON.parse(saved) as SavedInterviewState;
+    if (typeof state.sessionId === "string" && state.current?.question?.prompt) {
+      return state;
+    }
+  } catch {
+    // Discard an incomplete snapshot and let the user start a new session.
+  }
+  localStorage.removeItem(INTERVIEW_STATE_KEY);
+  return null;
+}
 
 export default function InterviewPage() {
+  const savedState = loadSavedInterviewState();
   const [track,      setTrack]      = useState<QuestionTrack>("DSA");
   const [difficulty, setDifficulty] = useState<QuestionDifficulty>("MEDIUM");
-  const [sessionId,  setSessionId]  = useState<string | null>(null);
-  const [current,    setCurrent]    = useState<NextQuestionResponse | null>(null);
+  const [sessionId,  setSessionId]  = useState<string | null>(savedState?.sessionId ?? null);
+  const [current,    setCurrent]    = useState<NextQuestionResponse | null>(savedState?.current ?? null);
   const [busy,       setBusy]       = useState(false);
   const [error,      setError]      = useState("");
   const [finished,   setFinished]   = useState(false);
+
+  useEffect(() => {
+    if (sessionId && current) {
+      localStorage.setItem(INTERVIEW_STATE_KEY, JSON.stringify({ sessionId, current }));
+    } else if (!sessionId) {
+      localStorage.removeItem(INTERVIEW_STATE_KEY);
+    }
+  }, [sessionId, current]);
 
   if (!localStorage.getItem(AUTH_TOKEN_KEY)) return <Navigate to="/login" replace />;
 
@@ -48,6 +79,7 @@ export default function InterviewPage() {
     await finishSession(sessionId);
     setFinished(true);
     setCurrent(null);
+    localStorage.removeItem(INTERVIEW_STATE_KEY);
   });
 
   const isCodingQuestion = current?.question.questionType === "CODING";
